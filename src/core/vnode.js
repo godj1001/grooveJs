@@ -1,3 +1,5 @@
+import {parseText} from './textParser'
+
 const unicodeRegExp = /a-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD/
 const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
 const commentReg = /^<!\\--/
@@ -10,6 +12,7 @@ const attribute = /^\s*([^\s"'<>\\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\
 const conditionalComment = /^<!\[/
 const reCache = {}
 const isPlainTextElement = makeMap('script,style,textarea', true)
+
 function makeMap (
   str,
   expectsLowerCase
@@ -43,7 +46,7 @@ function vnode (html, hashCode) {
     currentParent.children.push(element)
     element.parent = currentParent
   }
-  function start (tag, attrs, unary, start, end) {
+  function start (tag, attrs) {
     const element = createASTElement(tag, attrs, currentParent)
     if (!root) {
       element.hashCode = hashCode
@@ -56,15 +59,18 @@ function vnode (html, hashCode) {
 
     stack.push(element)
   }
-  function chars (text, start, end) {
+  function chars (text) {
     const children = currentParent.children
     if (text) {
+      let res
       let child
-      if (text !== ' ') {
+      // eslint-disable-next-line no-cond-assign
+      if (text !== ' '&& (res = parseText(text))) {
+        console.log(res)
         child = {
           type: 2,
-          expression: text,
-          tokens: text,
+          expression: res.expression,
+          tokens: res.tokens,
           text
         }
       } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') {
@@ -78,7 +84,7 @@ function vnode (html, hashCode) {
       }
     }
   }
-  function end (tag, start, end) {
+  function end () {
     // 子
     const element = stack[stack.length - 1]
     stack.length -= 1
@@ -86,7 +92,7 @@ function vnode (html, hashCode) {
     currentParent = stack[stack.length - 1]
     closeElement(element)
   }
-  function comment (text, start, end) {
+  function comment (text) {
     if (currentParent) {
       const child = {
         type: 3,
@@ -205,6 +211,7 @@ function vnode (html, hashCode) {
         }
         advance(start[0].length)
         let end, attr
+        // eslint-disable-next-line no-cond-assign
         while (!(end = html.match(startTagClose)) && (attr = html.match(dynamicArgAttribute) || html.match(attribute))) {
           attr.start = index
           advance(attr[0].length)
@@ -224,13 +231,17 @@ function vnode (html, hashCode) {
       const l = match.attrs.length
       const attrs = new Array(l)
       for (let i = 0; i < l; i++) {
-        const args = match.attrs[i]
+        let args = match.attrs[i]
+        if (args[1] === '@click'){
+          args[1] = 'onmouseup'
+        }
         const value = args[3] || args[4] || args[5] || ''
         attrs[i] = {
           name: args[1],
           value: value
         }
       }
+      console.log(attrs)
       stack.push({ tag: tagName, lowerCasedTag: tagName.toLowerCase(), attrs: attrs, start: match.start, end: match.end })
       lastTag = tagName
       options.start(tagName, attrs, false, match.start, match.end)

@@ -1,25 +1,23 @@
 module.exports = {
   env: {
-    browser: true,
-    es2021: true
+    es6: true,
+    node: true,
+    browser: true
   },
-  extends: [
-    'standard'
-  ],
-  parserOptions: {
-    ecmaVersion: 12,
-    sourceType: 'module'
-  },
-  rules: {
-    indent: [2, 2, { SwitchCase: 1 }],
-    'key-spacing': [2, { beforeColon: false, afterColon: true }],
-    semi: [2, 'never'],
-    'semi-spacing': 0,
-    'space-before-blocks': [2, 'always'],
-    'space-before-function-paren': [2, 'always'],
-    'space-in-parens': [2, 'never'],
-    'space-infix-ops': 2,
-    'space-unary-ops': [2, { words: true, nonwords: false }],
-    'spaced-comment': [2, 'always', { markers: ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!'] }]
+  parser: 'babel-eslint',
+  'extends': 'eslint:recommended',
+  'rules': {
+    // enable additional rules
+    'indent': ['error', 2],
+    'linebreak-style': ['error', 'unix'],
+    'quotes': ['error', 'single'],
+    'semi': [2, 'never'],
+
+    // override default options for rules from base configurations
+    'comma-dangle': ['error', 'never'],
+    'no-cond-assign': ['error', 'always'],
+
+    // disable rules from base configurations
+    'no-console': 'off'
   }
 }

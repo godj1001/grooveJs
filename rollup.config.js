@@ -1,5 +1,4 @@
 import babel from 'rollup-plugin-babel'
-import { uglify } from 'rollup-plugin-uglify'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 
@@ -13,7 +12,10 @@ export default {
   },
   plugins: [
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
+      plugins: [
+        '@babel/plugin-proposal-class-properties'
+      ]
     }),
     // 热更新 默认监听根文件夹
     livereload(),

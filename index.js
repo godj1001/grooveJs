@@ -53,6 +53,7 @@ const grooveOption = {
     },
     method:{
       helloWorld(){
+        console.log(this)
         this.dataReact.value.text = '啦啦啦德玛西亚'
         setTimeout(() => {
           this.dataReact.value.name = 'stellajs'

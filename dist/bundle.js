@@ -447,7 +447,7 @@
     };
   };
 
-  function vnode(html, hashCode) {
+  function parse(html, hashCode) {
     let currentParent;
     let root;
     const stack = [];
@@ -998,7 +998,7 @@
 
       this.hashCode = getHashCode();
       this.root = el;
-      this.ast = vnode(template, this.hashCode);
+      this.ast = parse(template, this.hashCode);
       this.cssDom = cssParse(css, this.hashCode);
       this.dataReact = observe(jsCode.data());
       this.watcher = {};
@@ -1145,6 +1145,7 @@
 
       method: {
         helloWorld() {
+          console.log(this);
           this.dataReact.value.text = '啦啦啦德玛西亚';
           setTimeout(() => {
             this.dataReact.value.name = 'stellajs';

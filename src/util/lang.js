@@ -15,3 +15,12 @@ export function parsePath (path) {
     return obj
   }
 }
+
+export function pluckModuleFunction (
+  modules,
+  key
+){
+  return modules
+    ? modules.map(m => m[key]).filter(_ => _)
+    : []
+}

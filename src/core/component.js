@@ -1,5 +1,5 @@
 import cssParse from './css'
-import vnode from './vnode'
+import parse from '../parser/parse'
 import observe from './react'
 import getHashCode from '../util/hash'
 import Watcher from './watch'
@@ -7,7 +7,7 @@ export default class Component {
   constructor(el,template,jsCode,css) {
     this.hashCode = getHashCode()
     this.root = el
-    this.ast = vnode(template,this.hashCode)
+    this.ast = parse(template,this.hashCode)
     this.cssDom = cssParse(css,this.hashCode)
     this.dataReact = observe(jsCode.data())
     this.watcher = {}

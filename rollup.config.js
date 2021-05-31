@@ -22,7 +22,7 @@ export default {
     // 本地服务器
     serve({
       open: true, // 自动打开页面
-      port: 8000,
+      port: 8081,
       openPage: '/public/index.html', // 打开的页面
       contentBase: ''
     })

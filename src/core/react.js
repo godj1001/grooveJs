@@ -12,6 +12,9 @@ function defineReactive (obj, key, val) {
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
+    /**
+     * 这会生成闭包，dep
+     */
     get: function reactiveGetter () {
       let value = getter ? getter.call(obj) : val
       console.log(Dep)
@@ -58,6 +61,9 @@ class Observer {
   }
   walk(obj) {
     let keys = Object.keys(obj)
+    /**
+     * 对每个属性进行一个响应式处理
+     */
     for (let i = 0, l = keys.length; i < l; i++) {
       this.convert(keys[i], obj[keys[i]])
     }

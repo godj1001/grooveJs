@@ -9,7 +9,15 @@ export default class Component {
     this.root = el
     this.ast = parse(template,this.hashCode)
     this.cssDom = cssParse(css,this.hashCode)
-    this.dataReact = observe(jsCode.data())
+    // this._vm = jsCode
+    /**
+     * 所有的数据变成响应式的
+     */
+    let dataObj = jsCode.data()
+
+    this.dataReact = observe(dataObj)
+    console.log('data',this)
+    // this.dataReact = observe(jsCode.data())
     this.watcher = {}
     this.method = jsCode.method ? jsCode.method: {}
     this.createFn = jsCode.create? jsCode.create : this.emptyFn
@@ -35,7 +43,7 @@ export default class Component {
           let val
           if (!this.watcher[`value.${t['@binding']}`]){
             const attrName = 'value.'+ t['@binding']
-            this.watcher[attrName] = new  Watcher(this.dataReact,attrName,this)
+            this.watcher[attrName] = new Watcher(this.dataReact,attrName,this)
           }
           console.log(this.watcher)
           val = this.watcher[`value.${t['@binding']}`].get()

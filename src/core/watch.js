@@ -55,7 +55,6 @@ class Watcher {
     }
   }
   update(){
-
     console.log('update')
     console.log(this.get())
     this.component.update()
